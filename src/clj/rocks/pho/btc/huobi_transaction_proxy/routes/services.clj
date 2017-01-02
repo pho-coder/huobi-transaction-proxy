@@ -1,7 +1,14 @@
 (ns rocks.pho.btc.huobi-transaction-proxy.routes.services
   (:require [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [clojure.tools.logging :as log]
+
+            [rocks.pho.btc.huobi-transaction-proxy.huobi-api :as ha]
+            [rocks.pho.btc.huobi-transaction-proxy.config :refer [env]]))
+
+(s/defschema Info {:success? Boolean
+                   :info String})
 
 (defapi service-routes
   {:swagger {:ui "/swagger-ui"
@@ -41,4 +48,50 @@
       :return      Long
       :header-params [x :- Long, y :- Long]
       :summary     "x^y with header-parameters"
-      (ok (long (Math/pow x y))))))
+      (ok (long (Math/pow x y))))
+
+    (POST "/buy-market" []
+          :return Info
+          :body-params [code :- Long, amount :- Double]
+          :summary "buy market"
+          (ok (try
+                (log/info "buy market: code:" code "amount:" amount)
+                (if (not= code 1074)
+                  {:success? false
+                   :info (str "code: " code " ERROR!")}
+                  (let [re (ha/buy-market (:huobi-access-key env)
+                                          (:huobi-secret-key env)
+                                          amount)]
+                    (if (= "success" (:result re))
+                      {:success? true
+                       :info (str "id: " (:id re))}
+                      {:success? false
+                       :info (str re)})))
+                (catch Exception e
+                  (log/error "buy market ERROR!")
+                  (log/error e)
+                  {:success? false
+                   :info (.toString e)}))))
+
+    (POST "/sell-market" []
+          :return Info
+          :body-params [code :- Long, amount :- Double]
+          :summary "sell market"
+          (ok (try
+                (log/info "sell market: code:" code "amount:" amount)
+                (if (not= code 1074)
+                  {:success? false
+                   :info (str "code: " code " ERROR!")}
+                  (let [re (ha/sell-market (:huobi-access-key env)
+                                           (:huobi-secret-key env)
+                                           amount)]
+                    (if (= "success" (:result re))
+                      {:success? true
+                       :info (str "id: " (:id re))}
+                      {:success? false
+                       :info (str re)})))
+                (catch Exception e
+                  (log/error "sell market ERROR!")
+                  (log/error e)
+                  {:success? false
+                   :info (.toString e)}))))))

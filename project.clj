@@ -1,4 +1,4 @@
-(defproject rocks.pho.btc.huobi-transaction-proxy "0.1.0-SNAPSHOT"
+(defproject rocks.pho.btc/huobi-transaction-proxy "0.1.0-SNAPSHOT"
 
   :description "huobi api proxy"
   :url "http://example.com/FIXME"
@@ -23,7 +23,10 @@
                  [ring-middleware-format "0.7.0"]
                  [ring-webjars "0.1.1"]
                  [ring/ring-defaults "0.2.1"]
-                 [selmer "1.10.0"]]
+                 [selmer "1.10.0"]
+                 [clj-http "3.4.1"]
+                 [org.clojure/data.json "0.2.6"]
+                 [digest "1.4.5"]]
 
   :min-lein-version "2.0.0"
 
