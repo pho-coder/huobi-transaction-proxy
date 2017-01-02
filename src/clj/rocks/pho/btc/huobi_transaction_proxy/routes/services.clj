@@ -56,7 +56,7 @@
           :summary "buy market"
           (ok (try
                 (log/info "buy market: code:" code "amount:" amount)
-                (if (not= code 1074)
+                (if (not= code (:code env))
                   {:success? false
                    :info (str "code: " code " ERROR!")}
                   (let [re (ha/buy-market (:huobi-access-key env)
@@ -79,7 +79,7 @@
           :summary "sell market"
           (ok (try
                 (log/info "sell market: code:" code "amount:" amount)
-                (if (not= code 1074)
+                (if (not= code (:code env))
                   {:success? false
                    :info (str "code: " code " ERROR!")}
                   (let [re (ha/sell-market (:huobi-access-key env)
@@ -92,6 +92,28 @@
                        :info (str re)})))
                 (catch Exception e
                   (log/error "sell market ERROR!")
+                  (log/error e)
+                  {:success? false
+                   :info (.toString e)}))))
+
+    (POST "/account-info" []
+          :return Info
+          :body-params [code :- Long]
+          :summary "account info"
+          (ok (try
+                (log/info "account info: code:" code)
+                (if (not= code (:code env))
+                  {:success? false
+                   :info (str "code: " code " ERROR!")}
+                  (let [re (ha/get-account-info (:huobi-access-key env)
+                                                (:huobi-secret-key env))]
+                    (if (= (:code re) "62")
+                      {:success? false
+                       :info (str re)}
+                      {:success? true
+                       :info (str re)})))
+                (catch Exception e
+                  (log/error "account info ERROR!")
                   (log/error e)
                   {:success? false
                    :info (.toString e)}))))))

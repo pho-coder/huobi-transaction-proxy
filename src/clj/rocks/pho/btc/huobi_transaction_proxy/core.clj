@@ -43,7 +43,8 @@
                         mount/start-with-args
                         :started)]
     (log/info component "started"))
-  (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))
+  (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app))
+  (log/debug env))
 
 (defn -main [& args]
   (start-app args))
