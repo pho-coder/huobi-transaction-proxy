@@ -151,3 +151,49 @@
                                                            :sign sign}}))
                    :key-fn keyword)))
 
+(defn get-order-id-by-trade-id
+  "get order id by trade id"
+  [access-key secret-key trade-id]
+  (let [unix-time (int (/ (System/currentTimeMillis) 1000))
+        sign-str (str "access_key="
+                      access-key
+                      "&coin_type=1"
+                      "&created="
+                      unix-time
+                      "&method=get_order_id_by_trade_id"
+                      "&secret_key="
+                      secret-key
+                      "&trade_id="
+                      trade-id)
+        sign (digest/md5 sign-str)]
+    (:body (http-client/post "https://api.huobi.com/apiv3"
+                             {:headers {"Content-Type" "application/x-www-form-urlencoded"}
+                              :form-params {:method "get_order_id_by_trade_id"
+                                            :access_key access-key
+                                            :coin_type 1
+                                            :created unix-time
+                                            :trade_id trade-id
+                                            :sign sign}}))))
+(defn get-order-info
+  "get order info by order id"
+  [access-key secret-key id]
+  (let [unix-time (int (/ (System/currentTimeMillis) 1000))
+        sign-str (str "access_key="
+                      access-key
+                      "&coin_type=1"
+                      "&created="
+                      unix-time
+                      "&id="
+                      id
+                      "&method=order_info"
+                      "&secret_key="
+                      secret-key)
+        sign (digest/md5 sign-str)]
+    (:body (http-client/post "https://api.huobi.com/apiv3"
+                             {:headers {"Content-Type" "application/x-www-form-urlencoded"}
+                              :form-params {:method "order_info"
+                                            :access_key access-key
+                                            :coin_type 1
+                                            :id id
+                                            :created unix-time
+                                            :sign sign}}))))

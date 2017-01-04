@@ -116,4 +116,46 @@
                   (log/error "account info ERROR!")
                   (log/error e)
                   {:success? false
+                   :info (.toString e)}))))
+
+    (POST "/get-order-id-by-trade-id" []
+          :return Info
+          :body-params [code :- Long trade-id :- String]
+          :summary "get order id"
+          (ok (try
+                (log/info "get order id by trade id:" trade-id
+                          "code:" code)
+                (if (not= code (:code env))
+                  {:success? false
+                   :info (str "code: " code " ERROR!")}
+                  (let [re (ha/get-order-id-by-trade-id (:huobi-access-key env)
+                                                        (:huobi-secret-key env)
+                                                        trade-id)]
+                    {:success? true
+                     :info (str re)}))
+                (catch Exception e
+                  (log/error "get order id by trade id ERROR!")
+                  (log/error e)
+                  {:success? false
+                   :info (.toString e)}))))
+
+    (POST "/order-info" []
+          :return Info
+          :body-params [code :- Long id :- String]
+          :summary "get order info"
+          (ok (try
+                (log/info "get order info by order id:" id
+                          "code:" code)
+                (if (not= code (:code env))
+                  {:success? false
+                   :info (str "code: " code " ERROR!")}
+                  (let [re (ha/get-order-info (:huobi-access-key env)
+                                              (:huobi-secret-key env)
+                                              id)]
+                    {:success? true
+                     :info (str re)}))
+                (catch Exception e
+                  (log/error "get order info ERROR!")
+                  (log/error e)
+                  {:success? false
                    :info (.toString e)}))))))
