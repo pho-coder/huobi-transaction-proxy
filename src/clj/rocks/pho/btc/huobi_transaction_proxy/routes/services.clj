@@ -3,6 +3,7 @@
             [compojure.api.sweet :refer :all]
             [schema.core :as s]
             [clojure.tools.logging :as log]
+            [clojure.data.json :as json]
 
             [rocks.pho.btc.huobi-transaction-proxy.huobi-api :as ha]
             [rocks.pho.btc.huobi-transaction-proxy.config :refer [env]]))
@@ -61,12 +62,14 @@
                    :info (str "code: " code " ERROR!")}
                   (let [re (ha/buy-market (:huobi-access-key env)
                                           (:huobi-secret-key env)
-                                          amount)]
-                    (if (= "success" (:result re))
+                                          amount)
+                        re-json (json/read-str re
+                                               :key-fn keyword)]
+                    (if (= "success" (:result re-json))
                       {:success? true
-                       :info (str "id: " (:id re))}
+                       :info re}
                       {:success? false
-                       :info (str re)})))
+                       :info re})))
                 (catch Exception e
                   (log/error "buy market ERROR!")
                   (log/error e)
@@ -84,12 +87,14 @@
                    :info (str "code: " code " ERROR!")}
                   (let [re (ha/sell-market (:huobi-access-key env)
                                            (:huobi-secret-key env)
-                                           amount)]
-                    (if (= "success" (:result re))
+                                           amount)
+                        re-json (json/read-str re
+                                               :key-fn keyword)]
+                    (if (= "success" (:result re-json))
                       {:success? true
-                       :info (str "id: " (:id re))}
+                       :info re}
                       {:success? false
-                       :info (str re)})))
+                       :info re})))
                 (catch Exception e
                   (log/error "sell market ERROR!")
                   (log/error e)
@@ -106,12 +111,14 @@
                   {:success? false
                    :info (str "code: " code " ERROR!")}
                   (let [re (ha/get-account-info (:huobi-access-key env)
-                                                (:huobi-secret-key env))]
-                    (if (= (:code re) "62")
+                                                (:huobi-secret-key env))
+                        re-json (json/read-str re
+                                               :key-fn keyword)]
+                    (if (= (:code re-json) "62")
                       {:success? false
-                       :info (str re)}
+                       :info re}
                       {:success? true
-                       :info (str re)})))
+                       :info re})))
                 (catch Exception e
                   (log/error "account info ERROR!")
                   (log/error e)
@@ -132,7 +139,7 @@
                                                         (:huobi-secret-key env)
                                                         trade-id)]
                     {:success? true
-                     :info (str re)}))
+                     :info re}))
                 (catch Exception e
                   (log/error "get order id by trade id ERROR!")
                   (log/error e)
@@ -153,7 +160,7 @@
                                               (:huobi-secret-key env)
                                               id)]
                     {:success? true
-                     :info (str re)}))
+                     :info re}))
                 (catch Exception e
                   (log/error "get order info ERROR!")
                   (log/error e)

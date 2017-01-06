@@ -1,6 +1,5 @@
 (ns rocks.pho.btc.huobi-transaction-proxy.huobi-api
   (:require [clj-http.client :as http-client]
-            [clojure.data.json :as json]
             [digest :as digest]))
 
 (defn get-account-info
@@ -33,16 +32,15 @@
                       "&price=" price
                       "&secret_key=" secret-key)
         sign (digest/md5 sign-str)]
-    (json/read-str (:body (http-client/post "https://api.huobi.com/apiv3"
-                                            {:headers {"Content-Type" "application/x-www-form-urlencoded"}
-                                             :form-params {:method "buy"
-                                                           :access_key access-key
-                                                           :coin_type 1
-                                                           :price price
-                                                           :amount amount
-                                                           :created unix-time
-                                                           :sign sign}}))
-                   :key-fn keyword)))
+    (:body (http-client/post "https://api.huobi.com/apiv3"
+                             {:headers {"Content-Type" "application/x-www-form-urlencoded"}
+                              :form-params {:method "buy"
+                                            :access_key access-key
+                                            :coin_type 1
+                                            :price price
+                                            :amount amount
+                                            :created unix-time
+                                            :sign sign}}))))
 
 (defn sell
   "sell by amount & price"
@@ -56,16 +54,15 @@
                       "&price=" price
                       "&secret_key=" secret-key)
         sign (digest/md5 sign-str)]
-    (json/read-str (:body (http-client/post "https://api.huobi.com/apiv3"
-                                            {:headers {"Content-Type" "application/x-www-form-urlencoded"}
-                                             :form-params {:method "sell"
-                                                           :access_key access-key
-                                                           :coin_type 1
-                                                           :price price
-                                                           :amount amount
-                                                           :created unix-time
-                                                           :sign sign}}))
-                   :key-fn keyword)))
+    (:body (http-client/post "https://api.huobi.com/apiv3"
+                             {:headers {"Content-Type" "application/x-www-form-urlencoded"}
+                              :form-params {:method "sell"
+                                            :access_key access-key
+                                            :coin_type 1
+                                            :price price
+                                            :amount amount
+                                            :created unix-time
+                                            :sign sign}}))))
 
 (defn buy-market
   "buy now"
@@ -78,15 +75,14 @@
                       "&method=buy_market"
                       "&secret_key=" secret-key)
         sign (digest/md5 sign-str)]
-    (json/read-str (:body (http-client/post "https://api.huobi.com/apiv3"
-                                            {:headers {"Content-Type" "application/x-www-form-urlencoded"}
-                                             :form-params {:method "buy_market"
-                                                           :access_key access-key
-                                                           :coin_type 1
-                                                           :amount amount
-                                                           :created unix-time
-                                                           :sign sign}}))
-                   :key-fn keyword)))
+    (:body (http-client/post "https://api.huobi.com/apiv3"
+                             {:headers {"Content-Type" "application/x-www-form-urlencoded"}
+                              :form-params {:method "buy_market"
+                                            :access_key access-key
+                                            :coin_type 1
+                                            :amount amount
+                                            :created unix-time
+                                            :sign sign}}))))
 
 (defn sell-market
   "sell now"
@@ -99,15 +95,14 @@
                       "&method=sell_market"
                       "&secret_key=" secret-key)
         sign (digest/md5 sign-str)]
-    (json/read-str (:body (http-client/post "https://api.huobi.com/apiv3"
-                                            {:headers {"Content-Type" "application/x-www-form-urlencoded"}
-                                             :form-params {:method "sell_market"
-                                                           :access_key access-key
-                                                           :coin_type 1
-                                                           :amount amount
-                                                           :created unix-time
-                                                           :sign sign}}))
-                   :key-fn keyword)))
+    (:body (http-client/post "https://api.huobi.com/apiv3"
+                             {:headers {"Content-Type" "application/x-www-form-urlencoded"}
+                              :form-params {:method "sell_market"
+                                            :access_key access-key
+                                            :coin_type 1
+                                            :amount amount
+                                            :created unix-time
+                                            :sign sign}}))))
 
 (defn loan-btc
   "loan now"
@@ -120,15 +115,14 @@
                       "&method=loan"
                       "&secret_key=" secret-key)
         sign (digest/md5 sign-str)]
-    (json/read-str (:body (http-client/post "https://api.huobi.com/apiv3"
-                                            {:headers {"Content-Type" "application/x-www-form-urlencoded"}
-                                             :form-params {:method "loan"
-                                                           :access_key access-key
-                                                           :amount amount
-                                                           :loan_type 2
-                                                           :created unix-time
-                                                           :sign sign}}))
-                   :key-fn keyword)))
+    (:body (http-client/post "https://api.huobi.com/apiv3"
+                             {:headers {"Content-Type" "application/x-www-form-urlencoded"}
+                              :form-params {:method "loan"
+                                            :access_key access-key
+                                            :amount amount
+                                            :loan_type 2
+                                            :created unix-time
+                                            :sign sign}}))))
 
 (defn repay-btc
   "repay btc"
@@ -141,15 +135,14 @@
                       "&method=repayment"
                       "&secret_key=" secret-key)
         sign (digest/md5 sign-str)]
-    (json/read-str (:body (http-client/post "https://api.huobi.com/apiv3"
-                                            {:headers {"Content-Type" "application/x-www-form-urlencoded"}
-                                             :form-params {:method "repayment"
-                                                           :access_key access-key
-                                                           :loan_id loan-id
-                                                           :amount amount
-                                                           :created unix-time
-                                                           :sign sign}}))
-                   :key-fn keyword)))
+    (:body (http-client/post "https://api.huobi.com/apiv3"
+                             {:headers {"Content-Type" "application/x-www-form-urlencoded"}
+                              :form-params {:method "repayment"
+                                            :access_key access-key
+                                            :loan_id loan-id
+                                            :amount amount
+                                            :created unix-time
+                                            :sign sign}}))))
 
 (defn get-order-id-by-trade-id
   "get order id by trade id"

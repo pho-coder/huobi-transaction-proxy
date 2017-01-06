@@ -1,4 +1,4 @@
-(defproject rocks.pho.btc/huobi-transaction-proxy "0.1.1-SNAPSHOT"
+(defproject rocks.pho.btc/huobi-transaction-proxy "0.1.2-SNAPSHOT"
 
   :description "huobi api proxy"
   :url "http://example.com/FIXME"
